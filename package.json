@@ -1,0 +1,27 @@
+{
+  "name": "products",
+  "version": "1.0.0",
+  "description": "products API section",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDC-Haskell/products.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDC-Haskell/products/issues"
+  },
+  "homepage": "https://github.com/SDC-Haskell/products#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^15.10.0",
+    "nodemon": "^2.0.7",
+    "pg": "^8.5.1",
+    "postgres": "^1.0.2"
+  }
+}
