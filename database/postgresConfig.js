@@ -30,31 +30,16 @@ const getProducts = function (req, res) {
   }
 
   let start = (page - 1) * count
-  debugger;
+  let query = `select * from products where product_id > ${start} limit ${count}`
 
-  client.query(`select * from products where product_id > ${start} limit ${count}`, (error, results) => {
-    if (error) {
-      res.send(error)
-    } else {
-      res.send(results.rows)
-    }
+  client.query(query)
+  .then((results) => {
+    res.send(results.rows)
   })
-
-  // client.query(`select * from products where product_id between ${(page*count)-4} and ${page + count - 1}`, (error, results) => {
-  //   if (error) {
-  //     res.send(error)
-  //   } else {
-  //     res.send(results.rows)
-  //   }
-  // })
+  .catch((error) => {
+    res.send(error)
+  })
 }
-
-// let featuresQuery = `SELECT
-// features.feature,
-// features.attribute
-// FROM products
-// INNER JOIN features ON products.product_id=features.product_id
-// where (products.product_id = ${id});`
 
 const getProductsById = function (req, res) {
   let id = Number(req.params.product_id)
@@ -71,27 +56,34 @@ const getProductsById = function (req, res) {
   .then((data) => {
     client.query(productsQuery)
     .then((data2) => {
-      let featuresArray = []
-      data.rows.forEach((feature) => {
-        let featuresObject = {}
-        featuresObject["feature"] = feature.feature;
-        featuresObject["attribute"] = feature.attribute
-        featuresArray.push(featuresObject)
-      })
-      let cleanData = data2.rows[0]
-      let resultObject = {product_id: cleanData.product_id, product_name:cleanData.product_name, slogan:cleanData.slogan, product_description:cleanData.product_description, category:cleanData.category, default_price:cleanData.default_price, features: featuresArray}
-      res.send(resultObject)
+      let featuresArray = data.rows
+      // let featuresArray = []
+      // data.rows.forEach((feature) => {
+      //   let featuresObject = {}
+      //   featuresObject["feature"] = feature.feature;
+      //   featuresObject["attribute"] = feature.attribute
+      //   featuresArray.push(featuresObject)
+      // })
+      // let cleanData = data2.rows[0]
+      // let resultObject = {product_id: cleanData.product_id, product_name:cleanData.product_name, slogan:cleanData.slogan, product_description:cleanData.product_description, category:cleanData.category, default_price:cleanData.default_price, features: featuresArray}
+      data2.rows[0]['features'] = featuresArray
+      res.send(data2.rows)
     })
   })
+  .catch((error) => {
+    res.send(error)
+  })
+}
+
+const getProductStyles = function (req, res) {
+  let id = Number(req.params.product_id)
+  let query = `select * from `
+
+
 }
 
 module.exports = {
   getProducts,
-  getProductsById
+  getProductsById,
+  getProductStyles
 }
-
-
-// client.query('SELECT $1::text as message', ['Hello world!'], (err, res) => {
-//   console.log(err ? err.stack : res.rows[0].message) // Hello World!
-//   client.end()
-// })
