@@ -2,23 +2,32 @@ const { Client } = require('pg');
 
 const config = {
   host: 'localhost',
-  user: 'root',
+  user: 'darian1',
+  password: 'password',
   database: 'allproducts',
-  // port: 5432
+  port: 5432
 }
 
 const client = new Client(config);
 
+const connection = client.connect();
 
-client.connect((err) => {
-  if (err) {
-    console.log("not working")
-  }
-})
+const getFirstFive = function (req, res) {
+
+  let count = 5;
+  let page = 1;
+
+  connection.query(`select * from products limit 5`, (error,result) => {
+    res.send(result)
+  })
+}
+
 
 module.exports = {
-  client
+  connection,
+  getFirstFive
 }
+
 
 // client.query('SELECT $1::text as message', ['Hello world!'], (err, res) => {
 //   console.log(err ? err.stack : res.rows[0].message) // Hello World!
