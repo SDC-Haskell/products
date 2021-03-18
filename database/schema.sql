@@ -9,18 +9,17 @@ CREATE TABLE products (
   PRIMARY KEY(product_id)
 );
 
-
--- CREATE TABLE styles (
---   style_id INT NOT NULL,
---   style_name VARCHAR ( 50 ),
---   original_price INT,
---   sale_price INT,
---   default_bool BOOLEAN,
---   PRIMARY KEY(style_id)
---   CONSTRAINT style_fk
---   FOREIGN KEY (product_id)
---   REFERENCES products_general(product_id)
--- );
+CREATE TABLE styles (
+  style_id INT NOT NULL,
+  product_id INT,
+  style_name VARCHAR ( 100 ),
+  sale_price INT ,
+  original_price INT,
+  default_style BOOLEAN,
+  PRIMARY KEY(style_id),
+  FOREIGN KEY (product_id)
+  REFERENCES products(product_id)
+);
 
 CREATE TABLE related_products (
   id INT NOT NULL,
@@ -31,27 +30,38 @@ CREATE TABLE related_products (
   REFERENCES products(product_id)
 );
 
--- CREATE TABLE style_skus (
---   id INT NOT NULL,
---   style_id INT,
---   size VARCHAR ( 50 ),
---   quantity VARCHAR ( 50 )
---   PRIMARY KEY(id)
---   CONSTRAINT sku_fk
---   FOREIGN KEY (style_id)
---   REFERENCES products_styles(style_id)
--- );
+CREATE TABLE style_skus (
+  id INT NOT NULL,
+  style_id INT,
+  size VARCHAR ( 50 ),
+  quantity INT,
+  PRIMARY KEY(id),
+  FOREIGN KEY (style_id)
+  REFERENCES styles(style_id)
+);
 
--- CREATE TABLE style_photos (
---   id INT NOT NULL,
---   style_id INT,
---   thumbnail_url VARCHAR ( 250 ),
---   photo_url VARCHAR ( 250 )
---   PRIMARY KEY(id)
---   CONSTRAINT photo_fk
---   FOREIGN KEY (style_id)
---   REFERENCES products_styles(style_id)
--- );
+CREATE TABLE style_photos (
+  id serial,
+  photo_id INT,
+  style_id INT,
+  large_url VARCHAR ( 1000 ),
+  thumbnail_url VARCHAR,
+  PRIMARY KEY(id),
+  FOREIGN KEY (style_id)
+  REFERENCES styles(style_id)
+);
+
+CREATE Table features (
+  id INT NOT NULL,
+  product_id INT,
+  feature VARCHAR(500),
+  attribute VARCHAR(500),
+  PRIMARY KEY (id),
+  FOREIGN KEY (product_id)
+  REFERENCES products(product_id)
+);
+
+-- \copy style_photos (photo_id, style_id, large_url, thumbnail_url) from '/Users/darianchan/Downloads/photos.csv' delimiter ',' csv header;
 
 -- psql -U postgres -h localhost
 
@@ -62,3 +72,28 @@ CREATE TABLE related_products (
 -- psql -h localhost -d allproducts -U darian1 < database/schema.sql
 
 -- \copy products from '/Users/darianchan/Desktop/Hack Reactor Bootcamp/products/data/product.csv' delimiter ',' csv header;
+
+-- select products.product_id,
+-- products.product_name,
+-- products.slogan,
+-- products.product_description,
+-- products.category,
+-- products.default_price,
+-- select products.product_id,
+-- products.product_name,
+-- products.slogan,
+-- products.product_description,
+-- products.category,
+-- products.default_price,
+-- features.feature,
+-- features.attribute
+-- from products join features on products.product_id = features.product_id;
+
+-- select products.product_id,
+-- products.product_name,
+-- products.slogan,
+-- products.product_description,
+-- products.category,
+-- products.default_price,
+-- json_build_object(features.feature, features.attribute)
+-- from products join features on products.product_id = features.product_id;
