@@ -5,9 +5,10 @@ CREATE TABLE products (
   product_description VARCHAR ( 500 ),
   category VARCHAR ( 100 ),
   default_price INT,
-  -- features json,
   PRIMARY KEY(product_id)
 );
+
+\copy products from '/Users/darianchan/Downloads/product.csv' delimiter ',' csv header;
 
 CREATE TABLE styles (
   style_id INT NOT NULL,
@@ -21,6 +22,8 @@ CREATE TABLE styles (
   REFERENCES products(product_id)
 );
 
+\copy styles from '/Users/darianchan/Downloads/styles.csv' delimiter ',' NULL as 'null' csv header;
+
 CREATE TABLE related_products (
   id INT NOT NULL,
   current_product_id INT,
@@ -29,6 +32,8 @@ CREATE TABLE related_products (
   FOREIGN KEY (current_product_id)
   REFERENCES products(product_id)
 );
+
+\copy related_products from '/Users/darianchan/Downloads/related.csv' delimiter ',' csv header;
 
 CREATE TABLE style_skus (
   id INT NOT NULL,
@@ -39,6 +44,8 @@ CREATE TABLE style_skus (
   FOREIGN KEY (style_id)
   REFERENCES styles(style_id)
 );
+
+\copy style_skus from '/Users/darianchan/Downloads/skus.csv' delimiter ',' csv header;
 
 CREATE TABLE style_photos (
   id serial,
@@ -51,6 +58,8 @@ CREATE TABLE style_photos (
   REFERENCES styles(style_id)
 );
 
+\copy style_photos (photo_id, style_id, large_url, thumbnail_url) from '/Users/darianchan/Downloads/photos.csv' delimiter ',' csv header;
+
 CREATE Table features (
   id INT NOT NULL,
   product_id INT,
@@ -61,7 +70,7 @@ CREATE Table features (
   REFERENCES products(product_id)
 );
 
--- \copy style_photos (photo_id, style_id, large_url, thumbnail_url) from '/Users/darianchan/Downloads/photos.csv' delimiter ',' csv header;
+\copy features from '/Users/darianchan/Downloads/features.csv' delimiter ',' csv header;
 
 -- psql -U postgres -h localhost
 
