@@ -80,23 +80,41 @@ const getProductStyles = function (req, res) {
   styles.style_id
   FROM styles
   INNER JOIN style_photos ON styles.style_id=style_photos.style_id
-  WHERE (styles.product_id = 1)`;
+  WHERE (styles.product_id = ${id})`;
 
-  // db.query(photosQuery)
-  // .then((photosData) => {
-  //   let photosArray = photosData.rows;
-  //   photosArray.forEach((photo) => {
-  //     debugger;
-  //     if (photo.style_id === style.style_id) {
-  //       photosResult.push(photo)
-  //     }
-  //   })
-  // })
+  const stylesPromise = db.query(stylesQuery)
+  const skusPromise = db.query(skusQuery)
+  const photosPromise = db.query(photosQuery)
 
-  // style["photos"] = photosResult
+  Promise.all([stylesPromise, skusPromise, photosPromise])
+  .then(([styles, skus, photos]) => {
+    let stylesArray = styles.rows;
+    let skusArray = skus.rows;
+    let photosArray = photos.rows;
 
+    stylesArray.forEach((style) => {
+      let skusObject = {}
+      let photosResult = []
 
+      skusArray.forEach((sku) => {
+        if (sku.style_id === style.style_id) {
+          skusObject[sku.id] = {quantity: sku.quantity, size: sku.size}
+        }
+      })
 
+      photosArray.forEach((photo) => {
+        if (photo.style_id === style.style_id) {
+          photosResult.push(photo)
+        }
+      })
+      style["skus"] = skusObject
+      style["photos"] = photosResult
+    })
+    let results = {product_id: id, results: stylesArray}
+    res.send(results)
+  })
+
+  /*
   // query skus data
   db.query(skusQuery)
   .then((skusData) => {
@@ -129,10 +147,14 @@ const getProductStyles = function (req, res) {
           style["skus"] = skusObject
           style["photos"] = photosResult
           res.send(stylesArray)
+
         })
       })
     })
   })
+  .catch((error) => {
+    res.send(error)
+  }) */
 }
 
 const getRelatedProducts = function(req, res) {

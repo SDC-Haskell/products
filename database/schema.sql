@@ -72,6 +72,13 @@ CREATE Table features (
 
 \copy features from '/Users/darianchan/Downloads/features.csv' delimiter ',' csv header;
 
+
+/* select product_id, JSON_AGG(json_build_object('feature', features.feature, 'value', features.attribute)
+order by product_id) as feature
+from features
+group by product_id */
+
+
 -- psql -U postgres -h localhost
 
 -- psql -U postgres
