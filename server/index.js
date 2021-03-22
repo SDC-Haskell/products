@@ -1,3 +1,5 @@
+var newRelic = require('newrelic'); // make new relic is at the top
+
 const express = require('express')
 const dbQueries = require('../database/dbQueries.js')
 const { Client } = require('pg');
