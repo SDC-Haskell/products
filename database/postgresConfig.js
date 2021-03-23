@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 
 const config = {
-  host: '127.0.0.1',
+  host: 'localhost',
   user: 'darian1',
   password: 'password',
   database: 'allproducts',
