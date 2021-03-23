@@ -113,6 +113,9 @@ const getProductStyles = function (req, res) {
     let results = {product_id: id, results: stylesArray}
     res.send(results)
   })
+  .catch((error) => {
+    res.send(error)
+  })
 
   /*
   // query skus data
