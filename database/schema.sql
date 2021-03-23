@@ -72,6 +72,12 @@ CREATE Table features (
 
 \copy features from '/Users/darianchan/Downloads/features.csv' delimiter ',' csv header;
 
+create index products_index on products (product_id);
+create index related_index on related_products (current_product_id);
+create index photos_index on style_photos (style_id, photo_id);
+create index skus_index on style_skus (style_id);
+create index styles_index on styles (style_id, product_id);
+
 
 /* select product_id, JSON_AGG(json_build_object('feature', features.feature, 'value', features.attribute)
 order by product_id) as feature

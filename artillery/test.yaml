@@ -1,0 +1,14 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+  defaults:
+    headers:
+      x-api-key: "{{ $processEnvironment.SERVICE_API_KEY }}"
+scenarios:
+  - flow:
+      - get:
+          url: "/products/1/styles"
+      - get:
+          url: "/products"
