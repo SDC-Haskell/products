@@ -1,8 +1,8 @@
 const { Client } = require('pg');
 
 const config = {
-  host: 'localhost',
-  user: 'darian1',
+  host: '172.31.35.23', // put the private ip here instead
+  user: 'postgres',
   password: 'password',
   database: 'allproducts',
   port: 5432
