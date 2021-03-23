@@ -7,6 +7,10 @@ const { Client } = require('pg');
 const app = express()
 const port = 3000
 
+app.get('/products', (req, res) => {
+  res.send("hi")
+})
+
 // app.get('/products', dbQueries.getProducts)
 
 // this one includes the features column as well - only difference than above
