@@ -17,6 +17,10 @@ app.get('/products/:product_id/styles', dbQueries.getProductStyles)
 
 app.get('/products/:product_id/related', dbQueries.getRelatedProducts)
 
+app.post('/loaderio-93bcca03e89fb74ba58ea822374e1e61/', function(req, res) {
+  console.log(req.files.foo); // the uploaded file object
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
