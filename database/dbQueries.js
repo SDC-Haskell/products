@@ -6,6 +6,10 @@ const config = {
 }
 const redisClient = redis.createClient(config)
 
+redisClient.on('error', err => {
+  console.log('Error' + err)
+})
+
 const getProducts = function (req, res) {
 
   let count = 5;
