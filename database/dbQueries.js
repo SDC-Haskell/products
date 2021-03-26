@@ -1,4 +1,7 @@
 const db = require('./postgresConfig.js')
+const redis = require('redis')
+const redisPort = 6379
+const redisClient = redis.createClient(redisPort)
 
 const getProducts = function (req, res) {
 
@@ -28,6 +31,14 @@ const getProducts = function (req, res) {
 const getProductsById = function (req, res) {
   let id = Number(req.params.product_id)
 
+  redisClient.get(id, (err, data) => {
+    if (err) throw err;
+
+    if (data !== null) {
+      res.send(JSON.parse(data))
+    }
+  })
+
   let featuresQuery = `SELECT
   features.feature,
   features.attribute
@@ -40,6 +51,7 @@ const getProductsById = function (req, res) {
   // make query for the features data
   db.query(featuresQuery)
   .then((data) => {
+    // res.send(data)
 
     // make query for the products data
     db.query(productsQuery)
@@ -51,6 +63,10 @@ const getProductsById = function (req, res) {
       }
       // combine the features data with products data and send result back
       data2.rows[0]['features'] = featuresArray
+
+      // cache the data here
+      redisClient.setex(id, 3600, JSON.stringify(data2.rows))
+
       res.send(data2.rows)
     })
   })
@@ -61,6 +77,16 @@ const getProductsById = function (req, res) {
 
 const getProductStyles = function (req, res) {
   let id = Number(req.params.product_id)
+  let stylesId = `${id}/styles`
+
+  redisClient.get(stylesId, (err, data) => {
+    if (err) throw err;
+
+    if (data !== null) {
+      res.send(JSON.parse(data))
+    }
+  })
+
 
   let skusQuery = `SELECT
   style_skus.id,
@@ -111,6 +137,11 @@ const getProductStyles = function (req, res) {
       style["photos"] = photosResult
     })
     let results = {product_id: id, results: stylesArray}
+
+    // want to set the results data here before sending it
+    let key = `${id}/styles`
+    redisClient.setex(key, 3600, JSON.stringify(results))
+
     res.send(results)
   })
   .catch((error) => {
