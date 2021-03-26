@@ -1,7 +1,10 @@
 const db = require('./postgresConfig.js')
 const redis = require('redis')
-const redisPort = 6379
-const redisClient = redis.createClient(redisPort)
+const config = {
+  host: `18.219.142.67`,
+  port: 6379
+}
+const redisClient = redis.createClient(config)
 
 const getProducts = function (req, res) {
 
